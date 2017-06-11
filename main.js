@@ -13,7 +13,7 @@ const Location = {
     stopLocationUpdates: FusedLocation.stopLocationUpdates,
     on: (eventName, cb) => {
         if (eventNames.indexOf(eventName) === -1) {
-            throw new Error('Event name has to be one of \'fusedLocationUpdate\' or \'fusedLocationErr\'');
+            throw new Error('Event name has to be one of \'fusedLocation\' or \'fusedLocationError\'');
         }
         return {listener: DeviceEventEmitter.addListener(eventName, cb).listener, eventName};
     },

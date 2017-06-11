@@ -51,7 +51,7 @@ include ':app'
 ## Permissions.
 Add this to your `AndroidManifest.xml`:
 
-```diff
+```xml
     ...
     <uses-permission android:name="android.permission.ACCESS_COURSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
