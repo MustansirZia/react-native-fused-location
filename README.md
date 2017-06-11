@@ -40,12 +40,11 @@ include ':app'
         protected List<ReactPackage> getPackages() {
           return Arrays.<ReactPackage>asList(
               ...
-    +         new FusedLocation(),
+            + new FusedLocation(),
               ...
               new MainReactPackage()
           );
         }
-    
         ......
       }
 ```
@@ -70,7 +69,7 @@ Add this to your `AndroidManifest.xml`:
 ## Usage.
 
 ### Example.
-```diff
+```js
 ...
 import FusedLocation from 'react-native-fused-location';
 ...
