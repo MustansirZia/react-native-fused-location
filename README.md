@@ -137,5 +137,5 @@ componentWillUnmount() {
                    
 ```
 ## Release Notes.       
-See CHANGELOG.md      
+See <a href="https://github.com/MustansirZia/react-native-fused-location/blob/master/CHANGELOG.md"> CHANGELOG.md</a>     
 
