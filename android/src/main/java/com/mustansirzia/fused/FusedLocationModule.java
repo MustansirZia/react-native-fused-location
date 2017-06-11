@@ -39,7 +39,7 @@ public class FusedLocationModule extends ReactContextBaseJavaModule {
     private LocationListener mLocationListener;
     private GoogleApiClient mGoogleApiClient;
 
-    public NativeLocationModule(ReactApplicationContext reactContext) {
+    public FusedLocationModule(ReactApplicationContext reactContext) {
         super(reactContext);
     }
 
