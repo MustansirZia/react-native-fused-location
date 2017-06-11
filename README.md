@@ -76,24 +76,28 @@ Add this to your `AndroidManifest.xml`:
 | `on` | `eventName, callback` | `Subscription` | Subscribe to an event. The callback with `Location` updates is eventName is `fusedLocation`. <br /> Call this after you call `startLocationUpdates`
 | `off` | `Subscription` | Nil | Unsubscribe from the corresponding subscription.
 
+<br />
+
 ### Configuration.
 #### `setLocationPriority(priority)`: <br />
-Set location accuracy. `priority` be of the following types.
+Set location accuracy. `priority` be of the following types. <br />
 `FusedLocation.Constants.HIGH_ACCURACY` Most accurate. Least battery efficient. Uses GPS only. <br />
 `FusedLocation.Constants.BALANCED` Mixed. Chooses an appropriate provider. <br />
 `FusedLocation.Constants.LOW_POWER` Least accurate. Most battery efficient. Uses Wifi/Cell Towers only. <br />
-`FusedLocation.Constants.NO_POWER` Uses location updates from other apps. (If they occur) Don't request location from your app. <br />
+`FusedLocation.Constants.NO_POWER` Uses location updates from other apps (if they occur). Don't request location from your app.
 
 #### `setLocationInterval(interval)` <br />
 Set an approximate interval (in milliseconds) between each location updates. Please note that this interval may not be strictly followed. Updates may come faster or slower than the interval argument.
 
 #### `setFastestLocationInterval(interval)` <br />
-Set the minimum possible interval between location updates. (In milliseconds)
+Set the minimum possible interval between location updates (in milliseconds).
 
 #### `setSmallestDisplacement(interval)` <br />
 Set smallest amount of displacement to occur after which the location update will be received.
 
 For more info, see <a href="https://developers.google.com/android/reference/com/google/android/gms/location/LocationRequest"> here. </a>
+
+<br />
 
 ### Types.
 ```
@@ -114,6 +118,8 @@ type Subscription {
         eventName: String
 }
 ```
+
+<br />
 
 ### Example.
 ```js
