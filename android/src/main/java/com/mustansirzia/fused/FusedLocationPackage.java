@@ -1,4 +1,4 @@
-package com.taxiapp.modules;
+package com.mustansirzia.fused;
 
 import com.facebook.react.ReactPackage;
 import com.facebook.react.bridge.JavaScriptModule;
@@ -14,7 +14,7 @@ import java.util.List;
  * Written with ❤! By M on 10/06/17.
  */
 
-public class FusedLocation implements ReactPackage {
+public class FusedLocationPackage implements ReactPackage {
     @Override
     public List<NativeModule> createNativeModules(ReactApplicationContext reactContext) {
         List<NativeModule> modules = new ArrayList<>();

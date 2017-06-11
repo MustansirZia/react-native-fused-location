@@ -1,4 +1,4 @@
-package com.taxiapp.modules;
+package com.mustansirzia.fused;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
