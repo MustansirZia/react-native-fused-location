@@ -1,7 +1,9 @@
 # react-native-fused-location
 
+[![npm version](https://badge.fury.io/js/react-native-fused-location.svg)](https://badge.fury.io/js/react-native-fused-location)
+
 Get the finest location on Android using <a href="https://developers.google.com/android/reference/com/google/android/gms/location/FusedLocationProviderApi"> Fused </a> API. <br /> <br />
-I created this native module with an inspiration that none of react native's location libraries use the newer Fused API to get location. According to google, it is the most accurate way to get location in an Android device and judges by itself when to use GPS or cell towers/wifi. Thus, it works with both.
+I created this react native module with an inspiration that none of react native's location libraries use the newer Fused API to get location. According to google, it is the most accurate way to get location in an Android device and judges by itself when to use GPS or cell towers/wifi. Thus, it works with both.
 <br />
 
 ## Install
