@@ -79,7 +79,7 @@ Add this to your `AndroidManifest.xml`:
 | `off` | `Subscription` | Nil | Unsubscribe from the corresponding subscription.
 
 ### Configuration.
-#### `setLocationPriority(priority)`: <br />
+#### `setLocationPriority(priority)` <br />
 Set location accuracy. `priority` be of the following types. <br />
 <b>`FusedLocation.Constants.HIGH_ACCURACY`</b> Most accurate. Least battery efficient. Uses GPS only. <br />
 <b>`FusedLocation.Constants.BALANCED`</b> Mixed. Chooses an appropriate provider. <br />
