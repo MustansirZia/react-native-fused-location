@@ -1,6 +1,6 @@
 {
   "name": "react-native-fused-location",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A react native module for android which gets the finest location from fused API.",
   "main": "main.js",
   "scripts": {

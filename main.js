@@ -7,7 +7,19 @@ import {NativeModules, DeviceEventEmitter, Platform} from 'react-native';
 const FusedLocation = NativeModules.FusedLocation;
 const eventNames = ['fusedLocation', 'fusedLocationError'];
 
-const Location = {
+const Dumb = {
+    getFusedLocation: () => console.warn('Fused location cannot be used for iOS.'),
+    startLocationUpdates: () => console.warn('Fused location cannot be used for iOS.'),
+    stopLocationUpdates: () => console.warn('Fused location cannot be used for iOS.'),
+    on: () => console.warn('Fused location cannot be used for iOS.'),
+    off: () => console.warn('Fused location cannot be used for iOS.'),
+    setLocationPriority: () => console.warn('Fused location cannot be used for iOS.'),
+    setLocationInterval: () => console.warn('Fused location cannot be used for iOS.'),
+    setFastestLocationInterval: () => console.warn('Fused location cannot be used for iOS.'),
+    setSmallestDisplacement: () => console.warn('Fused location cannot be used for iOS.'),
+};
+
+const Location = Platform.OS === 'ios' ? Dumb : {
     getFusedLocation: FusedLocation.getFusedLocation,
     startLocationUpdates: FusedLocation.startLocationUpdates,
     stopLocationUpdates: FusedLocation.stopLocationUpdates,
@@ -35,16 +47,4 @@ const Location = {
     }
 };
 
-const Dumb = {
-    getFusedLocation: () => console.warn('Fused location cannot be used for iOS.'),
-    startLocationUpdates: () => console.warn('Fused location cannot be used for iOS.'),
-    stopLocationUpdates: () => console.warn('Fused location cannot be used for iOS.'),
-    on: () => console.warn('Fused location cannot be used for iOS.'),
-    off: () => console.warn('Fused location cannot be used for iOS.'),
-    setLocationPriority: () => console.warn('Fused location cannot be used for iOS.'),
-    setLocationInterval: () => console.warn('Fused location cannot be used for iOS.'),
-    setFastestLocationInterval: () => console.warn('Fused location cannot be used for iOS.'),
-    setSmallestDisplacement: () => console.warn('Fused location cannot be used for iOS.'),
-};
-
-export default Platform === 'ios' ? Dumb : Location;
+export default Location;
