@@ -84,16 +84,20 @@ Set location accuracy. `priority` be of the following types. <br />
 <b>`FusedLocation.Constants.HIGH_ACCURACY`</b> Most accurate. Least battery efficient. Uses GPS only. <br />
 <b>`FusedLocation.Constants.BALANCED`</b> Mixed. Chooses an appropriate provider. <br />
 <b>`FusedLocation.Constants.LOW_POWER`</b> Least accurate. Most battery efficient. Uses Wifi/Cell Towers only. <br />
-<b>`FusedLocation.Constants.NO_POWER`</b> Uses location updates from other apps (if they occur). Don't request location from your app.
+<b>`FusedLocation.Constants.NO_POWER`</b> Uses location updates from other apps (if they occur). Don't request location from your app. <br />
+• Default `FusedLocation.Constants.BALANCED`<br />
 
 #### `setLocationInterval(interval)` <br />
-Set an approximate interval (in milliseconds) between each location updates. Please note that this interval may not be strictly followed. Updates may come faster or slower than the interval argument.
+Set an approximate interval (in milliseconds) between each location updates. Please note that this interval may not be strictly followed. Updates may come faster or slower than the interval argument. <br />
+• Default `15000`
 
 #### `setFastestLocationInterval(interval)` <br />
-Set the minimum possible interval between location updates (in milliseconds).
+Set the minimum possible interval between location updates (in milliseconds). <br />
+• Default `10000`
 
-#### `setSmallestDisplacement(interval)` <br />
-Set smallest amount of displacement to occur after which the location update will be received.
+#### `setSmallestDisplacement(displacement)` <br />
+Set smallest amount of displacement (in meters) to occur after which the location update will be received. <br />
+• Default `0`
 
 For more info, see <a href="https://developers.google.com/android/reference/com/google/android/gms/location/LocationRequest"> here. </a>
 
@@ -195,3 +199,5 @@ See <a href="https://github.com/MustansirZia/react-native-fused-location/blob/ma
 
 ## License.
 See <a href="https://github.com/MustansirZia/react-native-fused-location/blob/master/LICENSE.txt"> License</a>.
+
+[![NPM](https://nodei.co/npm/react-native-fused-location.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/react-native-fused-location/)

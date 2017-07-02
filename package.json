@@ -1,7 +1,7 @@
 {
   "name": "react-native-fused-location",
-  "version": "0.0.2",
-  "description": "A react native module for android which gets the finest location from fused API.",
+  "version": "0.0.3",
+  "description": "A react native module for android which gets the finest location from fused API. Gets location with or without GPS.",
   "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
