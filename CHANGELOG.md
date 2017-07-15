@@ -1,5 +1,9 @@
 ## Release Notes.
 
+### 0.0.4
+° Fixed typo in ReadMe. Changed `FusedLocation` to `FusedLocationPackage` in manual linking.
+PR by - https://github.com/jarvisluong
+
 ### 0.0.3
 ° Default values added to Readme.
 
