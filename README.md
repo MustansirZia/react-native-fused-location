@@ -36,13 +36,13 @@ include ':app'
 ```
 • in `MainApplication.java:`
 ```diff
-+ import com.mustansirzia.fused.FusedLocation;
++ import com.mustansirzia.fused.FusedLocationPackage;
     
     @Override
         protected List<ReactPackage> getPackages() {
           return Arrays.<ReactPackage>asList(
               ...
-+             new FusedLocation(),
++             new FusedLocationPackage(),
               ...
               new MainReactPackage()
           );
