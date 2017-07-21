@@ -1,5 +1,8 @@
 ## Release Notes.
 
+### 0.0.5
+° Fixed typo in ReadMe. Changed `setLocationFatestInterval` to `setFastestLocationInterval` in js example.
+
 ### 0.0.4
 ° Fixed typo in ReadMe. Changed `FusedLocation` to `FusedLocationPackage` in manual linking.
 PR by - https://github.com/jarvisluong

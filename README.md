@@ -146,7 +146,7 @@ async componentDidMount() {
         // Set options.
         FusedLocation.setLocationPriority(FusedLocation.Constants.BALANCED); 
         FusedLocation.setLocationInterval(20000);
-        FusedLocation.setLocationFastestInterval(15000); 
+        FusedLocation.setFastestLocationInterval(15000); 
         FusedLocation.setSmallestDisplacement(10);
         
         
