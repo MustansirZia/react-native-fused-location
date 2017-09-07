@@ -87,7 +87,7 @@ public class FusedLocationModule extends ReactContextBaseJavaModule {
     public void getFusedLocation( boolean forceNewLocation, final Promise promise) {
         try {
             if (!checkLocationEnabled()){
-                promise.reject(TAG, "Enable Location Services and Try Again.");
+                promise.reject(TAG, "Enable location services and try again.");
                 return;
             }
             if (!checkForPlayServices()) {
