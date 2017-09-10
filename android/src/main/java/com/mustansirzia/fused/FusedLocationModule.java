@@ -1,8 +1,10 @@
 package com.mustansirzia.fused;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.location.LocationManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
@@ -82,8 +84,12 @@ public class FusedLocationModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void getFusedLocation(final Promise promise) {
+    public void getFusedLocation( boolean forceNewLocation, final Promise promise) {
         try {
+            if (!checkLocationEnabled()){
+                promise.reject(TAG, "Enable location services and try again.");
+                return;
+            }
             if (!checkForPlayServices()) {
                 promise.reject(TAG, "Install Google Play Services First and Try Again.");
                 return;
@@ -98,19 +104,26 @@ public class FusedLocationModule extends ReactContextBaseJavaModule {
                     .addApi(LocationServices.API)
                     .build();
             googleApiClient.blockingConnect();
-            final Location location = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
+            final Location location;
+            if(!forceNewLocation) {
+                location = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
+            }
+            else {
+                location = null;
+            }
             if (location == null) {
                 LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, request, new LocationListener() {
                     @Override
                     public void onLocationChanged(Location l) {
                         LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);
+                        googleApiClient.disconnect();
                         promise.resolve(convertLocationToJSON(l));
                     }
                 });
             } else {
                 promise.resolve(convertLocationToJSON(location));
+                googleApiClient.disconnect();
             }
-            googleApiClient.disconnect();
         } catch (Exception ex) {
             Log.e(TAG, "Native Location Module ERR - " + ex.toString());
             promise.reject(TAG, ex.toString());
@@ -185,6 +198,7 @@ public class FusedLocationModule extends ReactContextBaseJavaModule {
         params.putDouble("bearing", l.getBearing());
         params.putString("provider", l.getProvider());
         params.putDouble("speed", l.getSpeed());
+        params.putBoolean("mocked", l.isFromMockProvider());
         return params;
     }
 
@@ -195,6 +209,18 @@ public class FusedLocationModule extends ReactContextBaseJavaModule {
         request.setFastestInterval(mLocationFastestInterval);
         request.setSmallestDisplacement(mSmallestDisplacement);
         return request;
+    }
+
+    private boolean checkLocationEnabled(){
+        LocationManager lm = (LocationManager)getReactApplicationContext().getSystemService(Context.LOCATION_SERVICE);
+        boolean gps_enabled = false;
+        try {
+            gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        } catch(Exception ex) {
+            Log.e(TAG, ex.toString());
+        }
+ 
+        return gps_enabled;
     }
 
     /*
