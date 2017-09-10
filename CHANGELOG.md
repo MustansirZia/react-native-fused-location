@@ -7,6 +7,8 @@
 
 ° Added `mocked` property to the `Location` object.
 
+• PR for #1 and #3 from [here](https://github.com/ginosi/react-native-fused-location).
+
 ### 0.0.5
 ° Fixed typo in ReadMe. Changed `setLocationFatestInterval` to `setFastestLocationInterval` in js example.
 
