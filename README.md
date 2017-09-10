@@ -74,7 +74,7 @@ Add this to your `AndroidManifest.xml`:
 ### API.
 | Function | Arguments | Returns | Note |
 |:---|:---:|:---:|:------|
-| `getFusedLocation` | `forceNewLocation` | `Location` | Call this once to get `Location`. Pass optional boolean `forceNewLocation` to get new location update. Returns a promise.
+| `getFusedLocation` | `forceNewLocation` | `Location` | Call this once to get `Location`. Pass optional boolean `forceNewLocation` to get new location update. Otherwise return the last known location. Returns a promise.
 | `startLocationUpdates` | Nil | Nil | Call this to start receiving location updates. <br /> **<b>Note</b>: You still need to subscribe to `fusedLocation` event. <br /> So, you need to call this before you call `FusedLocation.on`.
 | `stopLocationUpdates` | Nil | Nil | Stop receiving location updates. Call this to stop listening to device's location updates.
 | `on` | `eventName, callback` | `Subscription` | Subscribe to an event. The callback with `Location` updates is eventName is `fusedLocation`. <br /> Call this after you call `startLocationUpdates`
@@ -113,7 +113,8 @@ type Location {
         heading: Number,
         provider: String,
         accuracy: Number,
-        bearing: Number
+        bearing: Number,
+        mocked: Boolean
 }
 ```
 ```
@@ -165,7 +166,8 @@ async componentDidMount() {
              heading: 10,
              provider: 'fused',
              accuracy: 30,
-             bearing: 0
+             bearing: 0,
+             mocked: false
            }
            */
            console.log(location); 

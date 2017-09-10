@@ -86,8 +86,8 @@ public class FusedLocationModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void getFusedLocation( boolean forceNewLocation, final Promise promise) {
         try {
-            if (!checkLocationEnabled()){
-                promise.reject(TAG, "Enable location services and try again.");
+            if (!areProvidersAvailable()) {
+                promise.reject(TAG, "No location provider found.");
                 return;
             }
             if (!checkForPlayServices()) {
@@ -142,6 +142,12 @@ public class FusedLocationModule extends ReactContextBaseJavaModule {
             if (ActivityCompat.checkSelfPermission(getReactApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getReactApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 WritableMap params = new WritableNativeMap();
                 params.putString("error", "Appropriate permissions not given.");
+                sendEvent(getReactApplicationContext(), NATIVE_ERROR, params);
+                return;
+            }
+            if (!areProvidersAvailable()) {
+                WritableMap params = new WritableNativeMap();
+                params.putString("error", "No location provider found.");
                 sendEvent(getReactApplicationContext(), NATIVE_ERROR, params);
                 return;
             }
@@ -211,15 +217,14 @@ public class FusedLocationModule extends ReactContextBaseJavaModule {
         return request;
     }
 
-    private boolean checkLocationEnabled(){
+    private boolean areProvidersAvailable() {
         LocationManager lm = (LocationManager)getReactApplicationContext().getSystemService(Context.LOCATION_SERVICE);
         boolean gps_enabled = false;
         try {
-            gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
+            gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER) || lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
         } catch(Exception ex) {
             Log.e(TAG, ex.toString());
         }
- 
         return gps_enabled;
     }
 
