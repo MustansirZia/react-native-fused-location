@@ -1,6 +1,6 @@
 {
   "name": "react-native-fused-location",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "A react native module for android which gets the finest location from fused API. Gets location with or without GPS.",
   "main": "main.js",
   "scripts": {
