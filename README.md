@@ -198,6 +198,8 @@ componentWillUnmount() {
 ## Compatibility.
 Tested with RN versions `> 0.40.x`. For other versions I haven't had the time to test. Feel free to.
 
+Tested with Android SDK version `>= 16 (Android 4.1 - Jelly Bean)`. Please feel free to test it with other versions. 
+
 ## Release Notes.       
 See <a href="https://github.com/MustansirZia/react-native-fused-location/blob/master/CHANGELOG.md"> CHANGELOG.md</a>.     
 

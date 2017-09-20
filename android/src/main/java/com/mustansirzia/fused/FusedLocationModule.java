@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.provider.Settings;
 import android.location.LocationManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -204,7 +205,13 @@ public class FusedLocationModule extends ReactContextBaseJavaModule {
         params.putDouble("bearing", l.getBearing());
         params.putString("provider", l.getProvider());
         params.putDouble("speed", l.getSpeed());
-        params.putBoolean("mocked", l.isFromMockProvider());
+        boolean isMock = false;
+                if (android.os.Build.VERSION.SDK_INT >= 18) {
+                    isMock = l.isFromMockProvider();
+                } else {
+                    isMock = !Settings.Secure.getString(getReactApplicationContext().getContentResolver(), Settings.Secure.ALLOW_MOCK_LOCATION).equals("0");
+                }
+        params.putBoolean("mocked", isMock);
         return params;
     }
 
