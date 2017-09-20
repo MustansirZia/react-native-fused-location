@@ -206,11 +206,11 @@ public class FusedLocationModule extends ReactContextBaseJavaModule {
         params.putString("provider", l.getProvider());
         params.putDouble("speed", l.getSpeed());
         boolean isMock = false;
-                if (android.os.Build.VERSION.SDK_INT >= 18) {
-                    isMock = l.isFromMockProvider();
-                } else {
-                    isMock = !Settings.Secure.getString(getReactApplicationContext().getContentResolver(), Settings.Secure.ALLOW_MOCK_LOCATION).equals("0");
-                }
+        if (android.os.Build.VERSION.SDK_INT >= 18) {
+            isMock = l.isFromMockProvider();
+        } else {
+            isMock = !Settings.Secure.getString(getReactApplicationContext().getContentResolver(), Settings.Secure.ALLOW_MOCK_LOCATION).equals("0");
+        }
         params.putBoolean("mocked", isMock);
         return params;
     }
