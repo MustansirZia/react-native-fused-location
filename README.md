@@ -11,7 +11,7 @@ I created this react native module with an inspiration that none of react native
 ## Install
 `npm install react-native-fused-location --save`
 <br />
-or 
+or
 <br />
 `yarn add react-native-fused-location`
 <br />
@@ -39,7 +39,7 @@ include ':app'
 • in `MainApplication.java:`
 ```diff
 + import com.mustansirzia.fused.FusedLocationPackage;
-    
+
     @Override
         protected List<ReactPackage> getPackages() {
           return Arrays.<ReactPackage>asList(
@@ -49,7 +49,7 @@ include ':app'
               new MainReactPackage()
           );
         }
-        
+
 ```
 
 ## Permissions.
@@ -57,7 +57,7 @@ Add this to your `AndroidManifest.xml`:
 
 ```xml
     ...
-    <uses-permission android:name="android.permission.ACCESS_COURSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     ...
         <permission
@@ -139,23 +139,23 @@ async componentDidMount() {
                         }
                     );
      if (granted) {
-     
+
         FusedLocation.setLocationPriority(FusedLocation.Constants.HIGH_ACCURACY);
-        
-        // Get location once. 
-        const location = await FusedLocation.getFusedLocation(); 
-        this.setState({lat: location.latitude, long: location.longitude}); 
-        
+
+        // Get location once.
+        const location = await FusedLocation.getFusedLocation();
+        this.setState({lat: location.latitude, long: location.longitude});
+
         // Set options.
-        FusedLocation.setLocationPriority(FusedLocation.Constants.BALANCED); 
+        FusedLocation.setLocationPriority(FusedLocation.Constants.BALANCED);
         FusedLocation.setLocationInterval(20000);
-        FusedLocation.setFastestLocationInterval(15000); 
+        FusedLocation.setFastestLocationInterval(15000);
         FusedLocation.setSmallestDisplacement(10);
-        
-        
+
+
         // Keep getting updated location.
         FusedLocation.startLocationUpdates();
-        
+
         // Place listeners.
         this.subscription = FusedLocation.on('fusedLocation', location => {
            /* location = {
@@ -170,35 +170,35 @@ async componentDidMount() {
              mocked: false
            }
            */
-           console.log(location); 
-        }); 
-        
-        /* Optional 
+           console.log(location);
+        });
+
+        /* Optional
         this.errSubscription = FusedLocation.on('fusedLocationError', error => {
             console.warn(error);
         });
         */
-     } 
-                   
+     }
+
 ...
-                   
+
 componentWillUnmount() {
 
     FusedLocation.off(this.subscription);
     // FusedLocation.off(this.errSubscription);
     FusedLocation.stopLocationUpdates();
-    
+
 }  
-                 
+
 ...
-                   
+
 ```
 <br />
 
 ## Compatibility.
 Tested with RN versions `> 0.40.x`. For other versions I haven't had the time to test. Feel free to.
 
-Tested with Android SDK version `>= 16 (Android 4.1 - Jelly Bean)`. Please feel free to test it with other versions. 
+Tested with Android SDK version `>= 16 (Android 4.1 - Jelly Bean)`. Please feel free to test it with other versions.
 
 ## Release Notes.       
 See <a href="https://github.com/MustansirZia/react-native-fused-location/blob/master/CHANGELOG.md"> CHANGELOG.md</a>.     
