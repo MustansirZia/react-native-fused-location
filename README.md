@@ -1,7 +1,7 @@
 # react-native-fused-location
 
 [![npm version](https://badge.fury.io/js/react-native-fused-location.svg)](https://badge.fury.io/js/react-native-fused-location)
-[![Visual Studio Marketplace](https://img.shields.io/vscode-marketplace/d/ritwickdey.LiveServer.svg)](https://www.npmjs.com/package/react-native-fused-location)
+[![npm](https://img.shields.io/npm/dt/react-native-fused-location.svg)](https://www.npmjs.com/package/react-native-fused-location)
 [![MIT Licence](https://badges.frapsoft.com/os/mit/mit.svg?v=103)](https://opensource.org/licenses/mit-license.php)
 
 
