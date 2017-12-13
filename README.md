@@ -115,7 +115,8 @@ type Location {
         provider: String,
         accuracy: Number,
         bearing: Number,
-        mocked: Boolean
+        mocked: Boolean,
+        timestamp: String
 }
 ```
 ```
@@ -168,7 +169,8 @@ async componentDidMount() {
              provider: 'fused',
              accuracy: 30,
              bearing: 0,
-             mocked: false
+             mocked: false,
+             timestamp: '1513190221416'
            }
            */
            console.log(location);

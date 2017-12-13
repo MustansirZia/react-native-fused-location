@@ -205,6 +205,7 @@ public class FusedLocationModule extends ReactContextBaseJavaModule {
         params.putDouble("bearing", l.getBearing());
         params.putString("provider", l.getProvider());
         params.putDouble("speed", l.getSpeed());
+        params.putString("timestamp", Long.toString(l.getTime()));
         boolean isMock = false;
         if (android.os.Build.VERSION.SDK_INT >= 18) {
             isMock = l.isFromMockProvider();

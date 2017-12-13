@@ -1,5 +1,8 @@
 ## Release Notes.
 
+### 0.0.11
+° Add `timestamp` via [`getTime()`](https://developer.android.com/reference/android/location/Location.html#getTime()) to the `location` object. Returns the UNIX timestamp (in millis) of when the location was generated.
+
 ### 0.0.8
 ° Added `forceNewLocation` as an optional argument to `getFusedLocation`. This gets a new location everytime and never reuses a last known location.
 
