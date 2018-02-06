@@ -41,6 +41,7 @@ const Location = Platform.OS === 'ios' ? Dumb : {
     setLocationInterval: FusedLocation.setLocationInterval,
     setFastestLocationInterval: FusedLocation.setFastestLocationInterval,
     setSmallestDisplacement: FusedLocation.setSmallestDisplacement,
+    areProvidersAvailable: FusedLocation.areProvidersAvailable,
     Constants: {
         HIGH_ACCURACY: 0,
         BALANCED: 1,
