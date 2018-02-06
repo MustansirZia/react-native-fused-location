@@ -19,6 +19,7 @@ const Dumb = {
     setLocationInterval: noIOS,
     setFastestLocationInterval: noIOS,
     setSmallestDisplacement: noIOS,
+    areProvidersAvailable: noIOS,
 };
 
 const Location = Platform.OS === 'ios' ? Dumb : {
