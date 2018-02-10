@@ -180,6 +180,18 @@ public class FusedLocationModule extends ReactContextBaseJavaModule {
         }
     }
 
+    @ReactMethod
+    public boolean areProvidersAvailable() {
+        LocationManager lm = (LocationManager)getReactApplicationContext().getSystemService(Context.LOCATION_SERVICE);
+        boolean gps_enabled = false;
+        try {
+            gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER) || lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+        } catch(Exception ex) {
+            Log.e(TAG, ex.toString());
+        }
+        return gps_enabled;
+    }
+
     // ~ https://stackoverflow.com/questions/
     // 22493465/check-if-correct-google-play-service-available-unfortunately-application-has-s
     private boolean checkForPlayServices() {
@@ -223,17 +235,6 @@ public class FusedLocationModule extends ReactContextBaseJavaModule {
         request.setFastestInterval(mLocationFastestInterval);
         request.setSmallestDisplacement(mSmallestDisplacement);
         return request;
-    }
-
-    private boolean areProvidersAvailable() {
-        LocationManager lm = (LocationManager)getReactApplicationContext().getSystemService(Context.LOCATION_SERVICE);
-        boolean gps_enabled = false;
-        try {
-            gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER) || lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-        } catch(Exception ex) {
-            Log.e(TAG, ex.toString());
-        }
-        return gps_enabled;
     }
 
     /*
