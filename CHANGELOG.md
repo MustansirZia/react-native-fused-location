@@ -1,5 +1,9 @@
 ## Release Notes.
 
+### 0.1.0
+° Made `areProvidersAvailable` method public under `FusedLocation.areProvidersAvailable()`.
+° Semver for this repo started.
+
 ### 0.0.11
 ° Add `timestamp` via [`getTime()`](https://developer.android.com/reference/android/location/Location.html#getTime()) to the `location` object. Returns the UNIX timestamp (in millis) of when the location was generated.
 
