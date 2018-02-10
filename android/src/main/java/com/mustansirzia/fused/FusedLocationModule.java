@@ -85,7 +85,7 @@ public class FusedLocationModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void getFusedLocation( boolean forceNewLocation, final Promise promise) {
+    public void getFusedLocation(boolean forceNewLocation, final Promise promise) {
         try {
             if (!areProvidersAvailable()) {
                 promise.reject(TAG, "No location provider found.");
