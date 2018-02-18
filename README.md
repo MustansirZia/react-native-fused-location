@@ -182,6 +182,16 @@ async componentDidMount() {
             console.warn(error);
         });
         */
+       
+        /* Optional
+        this.statusSubscription = FusedLocation.on('fusedLocationStatus', status => {
+            /* status = {
+             availability: true 
+            }
+            */
+            console.log(status);
+        });
+        */
      }
 
 ...

@@ -8,6 +8,7 @@ import android.provider.Settings;
 import android.location.LocationManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.facebook.react.bridge.Promise;
@@ -22,8 +23,14 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationAvailability;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 
 /**
  * Written with ❤! By M on 10/06/17.
@@ -35,11 +42,13 @@ public class FusedLocationModule extends ReactContextBaseJavaModule {
     private final int PLAY_SERVICES_RESOLUTION_REQUEST = 2404;
     private final String NATIVE_EVENT = "fusedLocation";
     private final String NATIVE_ERROR = "fusedLocationError";
+    private final String NATIVE_STATUS = "fusedLocationStatus";
     private int mLocationInterval = 15000;
     private int mLocationPriority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY;
     private int mLocationFastestInterval = 10000;
     private int mSmallestDisplacement = 0;
     private LocationListener mLocationListener;
+    private LocationCallback mLocationCallback;
     private GoogleApiClient mGoogleApiClient;
 
     public FusedLocationModule(ReactApplicationContext reactContext) {
@@ -85,7 +94,7 @@ public class FusedLocationModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void getFusedLocation(boolean forceNewLocation, final Promise promise) {
+    public void getFusedLocation( boolean forceNewLocation, final Promise promise) {
         try {
             if (!areProvidersAvailable()) {
                 promise.reject(TAG, "No location provider found.");
@@ -158,13 +167,20 @@ public class FusedLocationModule extends ReactContextBaseJavaModule {
                     .addApi(LocationServices.API)
                     .build();
             mGoogleApiClient.blockingConnect();
-            mLocationListener = new LocationListener() {
+            mLocationCallback = new LocationCallback() {
                 @Override
-                public void onLocationChanged(Location l) {
-                    sendEvent(getReactApplicationContext(), NATIVE_EVENT, convertLocationToJSON(l));
+                public void onLocationResult(LocationResult result) {
+                    sendEvent(getReactApplicationContext(), NATIVE_EVENT, convertLocationToJSON(result.getLastLocation()));
+                }
+
+                @Override
+                public void onLocationAvailability(LocationAvailability locationAvailability) {
+                    WritableMap availability = new WritableNativeMap();
+                    availability.putBoolean("availability", locationAvailability.isLocationAvailable());
+                    sendEvent(getReactApplicationContext(), NATIVE_STATUS, availability);
                 }
             };
-            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, request, mLocationListener);
+            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, request, mLocationCallback, null);
         } catch (Exception ex) {
             Log.e(TAG, "Native Location Module ERR - " + ex.toString());
             WritableMap params = new WritableNativeMap();
@@ -175,8 +191,22 @@ public class FusedLocationModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void stopLocationUpdates() {
-        if (mGoogleApiClient != null && mLocationListener != null) {
-            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, mLocationListener);
+        if (mGoogleApiClient != null && mLocationCallback != null) {
+            PendingResult<Status> result = LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, mLocationCallback);
+            result.setResultCallback(new ResultCallback<Status>() {
+                @Override
+                public void onResult(@NonNull Status status) { 
+                    // Something went wrong! Throw RunTimeException on main thread
+                    // this will crash the application
+                    if (!status.isSuccess()) {
+                        throw new RuntimeException("Could not remove location updates!");
+                    } else {
+                        // TODO: Maybe send event here?
+                        Log.i(TAG, "Location request removed successfully");
+                    }
+                    mGoogleApiClient.disconnect();
+                 }
+            });
         }
     }
 
