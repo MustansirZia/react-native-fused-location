@@ -2,7 +2,9 @@ package com.mustansirzia.fused;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.IntentSender.SendIntentException;
 import android.location.Location;
 import android.provider.Settings;
 import android.location.LocationManager;
@@ -21,9 +23,16 @@ import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResult;
+import com.google.android.gms.location.LocationSettingsStates;
+import com.google.android.gms.location.LocationSettingsStatusCodes;
 
 /**
  * Written with ❤! By M on 10/06/17.
@@ -33,6 +42,7 @@ public class FusedLocationModule extends ReactContextBaseJavaModule {
 
     private static final String TAG = "REACT_NATIVE_FUSED_LOCATION";
     private final int PLAY_SERVICES_RESOLUTION_REQUEST = 2404;
+    private final int LOCATION_SETTINGS_REQUEST = 2409;
     private final String NATIVE_EVENT = "fusedLocation";
     private final String NATIVE_ERROR = "fusedLocationError";
     private int mLocationInterval = 15000;
@@ -190,6 +200,30 @@ public class FusedLocationModule extends ReactContextBaseJavaModule {
             Log.e(TAG, ex.toString());
         }
         return gps_enabled;
+    }
+
+
+    @ReactMethod
+    public void resolveLocationSettings() {
+        final GoogleApiClient googleApiClient;
+        googleApiClient = new GoogleApiClient.Builder(getReactApplicationContext()).addApi(LocationServices.API).build();
+        googleApiClient.blockingConnect();
+        LocationRequest request = buildLR();
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder().addLocationRequest(request);
+        PendingResult<LocationSettingsResult> result = LocationServices.SettingsApi.checkLocationSettings(googleApiClient, builder.build());
+        result.setResultCallback(new ResultCallback<LocationSettingsResult>() {
+            @Override
+            public void onResult(LocationSettingsResult result) {
+                final Status status = result.getStatus();
+                final LocationSettingsStates states = result.getLocationSettingsStates();
+                if (status.getStatusCode() == LocationSettingsStatusCodes.RESOLUTION_REQUIRED) {
+                    try {     
+                        status.startResolutionForResult(getCurrentActivity(), LOCATION_SETTINGS_REQUEST);
+                    } catch (SendIntentException e) {}
+                }
+                googleApiClient.disconnect();
+            }
+        });
     }
 
     // ~ https://stackoverflow.com/questions/
