@@ -20,7 +20,7 @@ const Dumb = {
     setFastestLocationInterval: noIOS,
     setSmallestDisplacement: noIOS,
     areProvidersAvailable: noIOS,
-    resolveLocationSettings: noIOS,
+    checkLocationSettings: noIOS,
 };
 
 const Location = Platform.OS === 'ios' ? Dumb : {
@@ -44,13 +44,18 @@ const Location = Platform.OS === 'ios' ? Dumb : {
     setFastestLocationInterval: FusedLocation.setFastestLocationInterval,
     setSmallestDisplacement: FusedLocation.setSmallestDisplacement,
     areProvidersAvailable: FusedLocation.areProvidersAvailable,
-    resolveLocationSettings: FusedLocation.resolveLocationSettings,
+    checkLocationSettings: (invokeDialogIfResolutionIsRequired = true) => FusedLocation.checkLocationSettings(invokeDialogIfResolutionIsRequired),
     Constants: {
         HIGH_ACCURACY: 0,
         BALANCED: 1,
         LOW_POWER: 2,
-        NO_POWER: 3
-    }
+        NO_POWER: 3,
+        LOCATION_SETTINGS_ALREADY_OPTIMAL: "LOCATION_SETTINGS_ALREADY_OPTIMAL",
+        LOCATION_SETTINGS_RESOLUTION_REQUIRED: "LOCATION_SETTINGS_RESOLUTION_REQUIRED",
+        LOCATION_SETTINGS_CHANGE_UNAVAILABLE: "LOCATION_SETTINGS_CHANGE_UNAVAILABLE",
+        LOCATION_SETTINGS_RESOLVED: "LOCATION_SETTINGS_RESOLVED",
+        LOCATION_SETTINGS_CANCELED: "LOCATION_SETTINGS_CANCELED",
+    },
 };
 
 export default Location;

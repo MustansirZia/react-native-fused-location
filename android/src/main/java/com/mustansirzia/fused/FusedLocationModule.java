@@ -1,6 +1,7 @@
 package com.mustansirzia.fused;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -19,6 +20,8 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeMap;
+import com.facebook.react.bridge.BaseActivityEventListener;
+import com.facebook.react.bridge.ActivityEventListener;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -39,10 +42,8 @@ import com.google.android.gms.location.LocationSettingsStatusCodes;
  */
 
 public class FusedLocationModule extends ReactContextBaseJavaModule {
-
     private static final String TAG = "REACT_NATIVE_FUSED_LOCATION";
     private final int PLAY_SERVICES_RESOLUTION_REQUEST = 2404;
-    private final int LOCATION_SETTINGS_REQUEST = 2409;
     private final String NATIVE_EVENT = "fusedLocation";
     private final String NATIVE_ERROR = "fusedLocationError";
     private int mLocationInterval = 15000;
@@ -51,9 +52,38 @@ public class FusedLocationModule extends ReactContextBaseJavaModule {
     private int mSmallestDisplacement = 0;
     private LocationListener mLocationListener;
     private GoogleApiClient mGoogleApiClient;
+    
+    private Promise settingsRequestPromise;
+    private final int LOCATION_SETTINGS_REQUEST_CODE = 2409;
+    private final String LOCATION_SETTINGS_ALREADY_OPTIMAL = "LOCATION_SETTINGS_ALREADY_OPTIMAL";
+    private final String LOCATION_SETTINGS_RESOLUTION_REQUIRED = "LOCATION_SETTINGS_RESOLUTION_REQUIRED";
+    private final String LOCATION_SETTINGS_CHANGE_UNAVAILABLE = "LOCATION_SETTINGS_CHANGE_UNAVAILABLE";
+    private final String LOCATION_SETTINGS_RESOLVED = "LOCATION_SETTINGS_RESOLVED";
+    private final String LOCATION_SETTINGS_CANCELED = "LOCATION_SETTINGS_CANCELED";
+
+    private final ActivityEventListener mActivityEventListener = new BaseActivityEventListener() {
+        @Override
+        public void onActivityResult(Activity activity, int requestCode, int resultCode, Intent intent) {
+            if (requestCode == LOCATION_SETTINGS_REQUEST_CODE) {
+                if (settingsRequestPromise != null) {
+                    switch (resultCode) {
+                        case Activity.RESULT_OK:
+                            settingsRequestPromise.resolve(LOCATION_SETTINGS_RESOLVED);
+                            settingsRequestPromise = null;
+                            break;
+                        case Activity.RESULT_CANCELED:
+                            settingsRequestPromise.resolve(LOCATION_SETTINGS_CANCELED);
+                            settingsRequestPromise = null;
+                            break;
+                    }
+                }
+            }
+        }
+    };
 
     public FusedLocationModule(ReactApplicationContext reactContext) {
         super(reactContext);
+        reactContext.addActivityEventListener(mActivityEventListener);
     }
 
     @Override
@@ -92,6 +122,52 @@ public class FusedLocationModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void setSmallestDisplacement(int mSmallestDisplacement) {
         this.mSmallestDisplacement = mSmallestDisplacement;
+    }
+
+    @ReactMethod
+    public void checkLocationSettings(final boolean invokeDialogIfResolutionIsRequired, final Promise promise) {
+        final GoogleApiClient googleApiClient;
+        googleApiClient = new GoogleApiClient.Builder(getReactApplicationContext()).addApi(LocationServices.API).build();
+        googleApiClient.blockingConnect();
+
+        LocationRequest request = buildLR();
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder().addLocationRequest(request);
+
+        // Store the promise for later use in mActivityEventListener
+        settingsRequestPromise = promise;
+
+        PendingResult<LocationSettingsResult> result = LocationServices.SettingsApi.checkLocationSettings(googleApiClient, builder.build());
+        result.setResultCallback(new ResultCallback<LocationSettingsResult>() {
+            @Override
+            public void onResult(LocationSettingsResult result) {
+                final Status status = result.getStatus();
+                final LocationSettingsStates states = result.getLocationSettingsStates();
+                switch (status.getStatusCode()) {
+                    case LocationSettingsStatusCodes.SUCCESS:
+                        settingsRequestPromise.resolve(LOCATION_SETTINGS_ALREADY_OPTIMAL);
+                        settingsRequestPromise = null;
+                        break;
+                    case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
+                        if (invokeDialogIfResolutionIsRequired) {
+                            try {     
+                                status.startResolutionForResult(getCurrentActivity(), LOCATION_SETTINGS_REQUEST_CODE);
+                            } catch (SendIntentException e) {
+                                settingsRequestPromise.reject(TAG, e);
+                                settingsRequestPromise = null;
+                            }
+                        } else {
+                            settingsRequestPromise.resolve(LOCATION_SETTINGS_RESOLUTION_REQUIRED);
+                            settingsRequestPromise = null;
+                        }
+                        break;
+                    case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+                        settingsRequestPromise.resolve(LOCATION_SETTINGS_CHANGE_UNAVAILABLE);
+                        settingsRequestPromise = null;
+                        break;
+                }
+                googleApiClient.disconnect();
+            }
+        });
     }
 
     @ReactMethod
@@ -200,30 +276,6 @@ public class FusedLocationModule extends ReactContextBaseJavaModule {
             Log.e(TAG, ex.toString());
         }
         return gps_enabled;
-    }
-
-
-    @ReactMethod
-    public void resolveLocationSettings() {
-        final GoogleApiClient googleApiClient;
-        googleApiClient = new GoogleApiClient.Builder(getReactApplicationContext()).addApi(LocationServices.API).build();
-        googleApiClient.blockingConnect();
-        LocationRequest request = buildLR();
-        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder().addLocationRequest(request);
-        PendingResult<LocationSettingsResult> result = LocationServices.SettingsApi.checkLocationSettings(googleApiClient, builder.build());
-        result.setResultCallback(new ResultCallback<LocationSettingsResult>() {
-            @Override
-            public void onResult(LocationSettingsResult result) {
-                final Status status = result.getStatus();
-                final LocationSettingsStates states = result.getLocationSettingsStates();
-                if (status.getStatusCode() == LocationSettingsStatusCodes.RESOLUTION_REQUIRED) {
-                    try {     
-                        status.startResolutionForResult(getCurrentActivity(), LOCATION_SETTINGS_REQUEST);
-                    } catch (SendIntentException e) {}
-                }
-                googleApiClient.disconnect();
-            }
-        });
     }
 
     // ~ https://stackoverflow.com/questions/
