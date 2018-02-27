@@ -81,6 +81,7 @@ Add this to your `AndroidManifest.xml`:
 | `on` | `eventName, callback` | `Subscription` | Subscribe to an event. The callback with `Location` updates is eventName is `fusedLocation`. <br /> Call this after you call `startLocationUpdates`
 | `off` | `Subscription` | Nil | Unsubscribe from the corresponding subscription.
 | `areProvidersAvailable` | Nil | Boolean | Returns true if location providers are currently available on the device. False otherwise.
+| `checkLocationSettings` | `invokeDialogIfResolutionIsRequired` | String | Call this to check if the relevant system settings are enabled on the device to carry out the desired location request. Optionally, invoke a dialog that allows the user to enable the necessary location settings with a single tap. Returns a promise resolving to one of the LOCATION_SETTINGS constants.
 
 ### Configuration.
 #### `setLocationPriority(priority)` <br />
