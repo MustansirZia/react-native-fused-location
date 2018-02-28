@@ -4,8 +4,9 @@ import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.provider.Settings;
 import android.location.LocationManager;
+import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
@@ -21,8 +22,14 @@ import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.LocationAvailability;
+import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 
 /**
@@ -31,7 +38,7 @@ import com.google.android.gms.location.LocationServices;
 
 public class FusedLocationModule extends ReactContextBaseJavaModule {
 
-    private static final String TAG = "REACT_NATIVE_FUSED_LOCATION";
+    private static final String TAG = "FUSED_LOCATION";
     private final int PLAY_SERVICES_RESOLUTION_REQUEST = 2404;
     private final String NATIVE_EVENT = "fusedLocation";
     private final String NATIVE_ERROR = "fusedLocationError";
@@ -84,6 +91,7 @@ public class FusedLocationModule extends ReactContextBaseJavaModule {
         this.mSmallestDisplacement = mSmallestDisplacement;
     }
 
+    @SuppressWarnings("All")
     @ReactMethod
     public void getFusedLocation(boolean forceNewLocation, final Promise promise) {
         try {
@@ -106,31 +114,40 @@ public class FusedLocationModule extends ReactContextBaseJavaModule {
                     .build();
             googleApiClient.blockingConnect();
             final Location location;
-            if(!forceNewLocation) {
+            if (!forceNewLocation) {
                 location = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
-            }
-            else {
+            } else {
                 location = null;
             }
             if (location == null) {
-                LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, request, new LocationListener() {
+                LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, request, new LocationCallback() {
                     @Override
-                    public void onLocationChanged(Location l) {
+                    public void onLocationResult(LocationResult locationResult) {
+                        super.onLocationResult(locationResult);
+                        promise.resolve(convertLocationToJSON(locationResult.getLastLocation()));
+                    }
+
+                    @Override
+                    public void onLocationAvailability(LocationAvailability locationAvailability) {
+                        super.onLocationAvailability(locationAvailability);
                         LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);
                         googleApiClient.disconnect();
-                        promise.resolve(convertLocationToJSON(l));
+                        if (!locationAvailability.isLocationAvailable()) {
+                            promise.reject(TAG, "Location not available. Does your phone have GPS turned on and internet connectivity?");
+                        }
                     }
-                });
-            } else {
-                promise.resolve(convertLocationToJSON(location));
-                googleApiClient.disconnect();
+                }, null);
+                return;
             }
+            promise.resolve(convertLocationToJSON(location));
+            googleApiClient.disconnect();
         } catch (Exception ex) {
             Log.e(TAG, "Native Location Module ERR - " + ex.toString());
             promise.reject(TAG, ex.toString());
         }
     }
 
+    @SuppressWarnings("All")
     @ReactMethod
     public void startLocationUpdates() {
         try {
@@ -176,17 +193,26 @@ public class FusedLocationModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void stopLocationUpdates() {
         if (mGoogleApiClient != null && mLocationListener != null) {
-            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, mLocationListener);
+            PendingResult<Status> pendingResult = LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, mLocationListener);
+            pendingResult.setResultCallback(new ResultCallback<Status>() {
+                @Override
+                public void onResult(@NonNull Status status) {
+                    if (!status.isSuccess()) {
+                        Log.e(TAG, "Could not remove location updates.");
+                    }
+                    mGoogleApiClient.disconnect();
+                }
+            });
         }
     }
 
     @ReactMethod
     public boolean areProvidersAvailable() {
-        LocationManager lm = (LocationManager)getReactApplicationContext().getSystemService(Context.LOCATION_SERVICE);
+        LocationManager lm = (LocationManager) getReactApplicationContext().getSystemService(Context.LOCATION_SERVICE);
         boolean gps_enabled = false;
         try {
             gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER) || lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             Log.e(TAG, ex.toString());
         }
         return gps_enabled;
@@ -218,7 +244,7 @@ public class FusedLocationModule extends ReactContextBaseJavaModule {
         params.putString("provider", l.getProvider());
         params.putDouble("speed", l.getSpeed());
         params.putString("timestamp", Long.toString(l.getTime()));
-        boolean isMock = false;
+        boolean isMock;
         if (android.os.Build.VERSION.SDK_INT >= 18) {
             isMock = l.isFromMockProvider();
         } else {
@@ -246,7 +272,7 @@ public class FusedLocationModule extends ReactContextBaseJavaModule {
                     .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
                     .emit(eventName, params);
         } else {
-            Log.i(TAG, "Waiting for CatalystInstance...");
+            Log.i(TAG, "Waiting for Catalyst Instance...");
         }
     }
 }
