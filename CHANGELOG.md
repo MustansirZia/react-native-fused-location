@@ -1,5 +1,8 @@
 ## Release Notes.
 
+### 0.2.0
+° `LocationCallback` added instead of `LocationListener` to method `getFusedLocation()` when last location returned null or forceNewLocation was set to true. This would guarantee the promise is resolved or rejected depending upon location availability.
+
 ### 0.1.0
 ° Made `areProvidersAvailable` method public under `FusedLocation.areProvidersAvailable()`.
 ° Semver for this repo started.
