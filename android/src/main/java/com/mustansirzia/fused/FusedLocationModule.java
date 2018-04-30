@@ -207,7 +207,11 @@ public class FusedLocationModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public boolean areProvidersAvailable() {
+    public void areProvidersAvailable(final Promise promise) {
+        promise.resolve(areProvidersAvailable());
+    }
+
+    private boolean areProvidersAvailable() {
         LocationManager lm = (LocationManager) getReactApplicationContext().getSystemService(Context.LOCATION_SERVICE);
         boolean gps_enabled = false;
         try {
