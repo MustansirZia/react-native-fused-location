@@ -81,7 +81,7 @@ Add this to your `AndroidManifest.xml`:
 | `stopLocationUpdates` | Nil | Nil | Stop receiving location updates. Call this to stop listening to device's location updates.
 | `on` | `eventName, callback` | `Subscription` | Subscribe to an event. The callback with `Location` updates is eventName is `fusedLocation`. <br /> Call this after you call `startLocationUpdates`
 | `off` | `Subscription` | Nil | Unsubscribe from the corresponding subscription.
-| `areProvidersAvailable` | Nil | Boolean | Returns true if location providers are currently available on the device. False otherwise.
+| `areProvidersAvailable` | Nil | `Promise[Boolean]` | Returns a promise that will always resolve to a boolean value. The resolved value reflects the providers' availability; true when location providers are available and false otherwise.
 
 ### Configuration.
 #### `setLocationPriority(priority)` <br />
