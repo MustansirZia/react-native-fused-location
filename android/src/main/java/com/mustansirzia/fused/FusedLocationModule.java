@@ -172,8 +172,9 @@ public class FusedLocationModule extends ReactContextBaseJavaModule {
                 WritableMap params = new WritableNativeMap();
                 params.putString("error", ERROR_NO_LOCATION_PROVIDER);
                 sendEvent(getReactApplicationContext(), NATIVE_ERROR, params);
-                promise.reject(TAG, ERROR_NO_LOCATION_PROVIDER);
-                return;
+                // Allow the App to still register the location updates so that it can send new locations if the user turns on the GPS through the notification bar
+                // promise.reject(TAG, ERROR_NO_LOCATION_PROVIDER);
+                // return;
             }
             LocationRequest request = buildLR();
             Log.d("request", request.getPriority() + "");
