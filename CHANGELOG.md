@@ -1,5 +1,8 @@
 ## Release Notes.
 
+### 0.4.0
+° `BuildToolsVersion` and `sdkVersion` are now taken from the main android project's gradle file.
+
 ### 0.2.0
 ° `LocationCallback` added instead of `LocationListener` to method `getFusedLocation()` when last location returned null or forceNewLocation was set to true. This would guarantee the promise is resolved or rejected depending upon location availability.
 
