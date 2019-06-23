@@ -1,5 +1,11 @@
 ## Release Notes.
 
+### 0.5.0
+° Google play services version can now be overriden and is defaulted to `16.+`.
+° Android gradle version updated to `3.3.2`.
+• Compile SDK version defaulted to `28`.
+•  Build tools version defaulted to `28.0.3`.
+
 ### 0.4.0
 ° `BuildToolsVersion` and `sdkVersion` are now taken from the main android project's gradle file.
 
