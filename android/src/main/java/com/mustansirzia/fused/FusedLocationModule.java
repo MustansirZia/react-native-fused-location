@@ -159,7 +159,8 @@ public class FusedLocationModule extends ReactContextBaseJavaModule {
                 WritableMap params = new WritableNativeMap();
                 params.putString("error", "No location provider found.");
                 sendEvent(getReactApplicationContext(), NATIVE_ERROR, params);
-                return;
+                // Allow the App to still register the location updates so that it can send new locations if the user turns on the GPS through the notification bar
+                // return;
             }
             LocationRequest request = buildLR();
             Log.e("request", request.getPriority() + "");
@@ -191,21 +192,18 @@ public class FusedLocationModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void stopLocationUpdates() {
-        if (mGoogleApiClient != null && mLocationCallback != null) {
+        if (mGoogleApiClient != null && mLocationCallback != null && mGoogleApiClient.isConnected()) {
             PendingResult<Status> result = LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, mLocationCallback);
             result.setResultCallback(new ResultCallback<Status>() {
                 @Override
-                public void onResult(@NonNull Status status) { 
-                    // Something went wrong! Throw RunTimeException on main thread
-                    // this will crash the application
+                public void onResult(@NonNull Status status) {
+                    mGoogleApiClient.disconnect();
                     if (!status.isSuccess()) {
-                        throw new RuntimeException("Could not remove location updates!");
+                        Log.e(TAG, "Could not remove location updates.");
                     } else {
-                        // TODO: Maybe send event here?
                         Log.i(TAG, "Location request removed successfully");
                     }
-                    mGoogleApiClient.disconnect();
-                 }
+                }
             });
         }
     }
