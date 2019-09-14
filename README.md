@@ -113,7 +113,6 @@ type Location {
         longitude: Number,
         speed: Number,
         altitude: Number,
-        heading: Number,
         provider: String,
         accuracy: Number,
         bearing: Number,
@@ -167,10 +166,9 @@ async componentDidMount() {
              longitude: -2.2323,
              speed: 0,
              altitude: 0,
-             heading: 10,
              provider: 'fused',
              accuracy: 30,
-             bearing: 0,
+             bearing: 10,
              mocked: false,
              timestamp: '1513190221416'
            }
