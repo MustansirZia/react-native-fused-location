@@ -36,7 +36,7 @@ const checkforAndroid = (): void => {
 };
 
 export default {
-    getFusedLocation: (forceNewLocation: boolean): Promise<Location> => {
+    getFusedLocation: (forceNewLocation = false): Promise<Location> => {
         checkforAndroid();
         return FusedLocation.getFusedLocation(forceNewLocation);
     },

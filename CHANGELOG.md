@@ -1,5 +1,8 @@
 ## Release Notes.
 
+### 1.1.1
+° `forceNewLocation` argument made optional for `getFusedLocation` function call.
+
 ### 1.0.0 - BREAKING CHANGE.
 ° Support library migrated to AndroidX namespace.
 <br />

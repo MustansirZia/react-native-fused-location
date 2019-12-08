@@ -1,13 +1,13 @@
 {
   "name": "react-native-fused-location",
-  "version": "1.0.0",
+  "version": "1.1.1",
   "description": "A react native module for android which gets the finest location from fused API. Gets location with or without GPS.",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
     "start": "tsc -w",
     "build": "tsc",
-    "prepublish": "npm run build --prepend-node-path",
+    "prepublish": "npm run build --scripts-prepend-node-path",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
