@@ -1,5 +1,9 @@
 ## Release Notes.
 
+### 1.0.0 - BREAKING CHANGE.
+° Support library migrated to AndroidX namespace.
+° Added support for Typescript. ❤️
+
 ### 0.5.0
 ° Google play services version can now be overriden and is defaulted to `16.+`.
 ° Android gradle version updated to `3.3.2`.

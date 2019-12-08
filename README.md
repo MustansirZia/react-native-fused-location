@@ -51,8 +51,18 @@ include ':app'
               new MainReactPackage()
           );
         }
-
 ```
+#### Migration to AndroidX. - BREAKING CHANGE in `1.0.0`.
+• Version `1.0.0` and above of this libary now makes use of AndroidX namespace instead of the legacy android support library namespace. If your app hasn't migrated to AndroidX yet, consider doing so or instead use an older version of this library such as `0.5.1`. React Native `0.59` uses AndroidX. 
+<br />
+To enable AndroidX add these two lines in your `android/gradle.properties` file.
+```properties
+android.useAndroidX=true
+android.enableJetifier=true
+```
+If this doesn't work out. Check out [this](https://developer.android.com/jetpack/androidx/migrate) official guide from Google. 
+<br> 
+A guide more specific to React Native would be [here](https://itnext.io/react-native-how-to-handle-an-app-with-both-pre-androidx-and-androidx-dependencies-rn60-bf4df7ea0dd2). 
 
 ## Permissions.
 Add this to your `AndroidManifest.xml`:
@@ -199,11 +209,13 @@ componentWillUnmount() {
 <br />
 
 ## Compatibility.
-Tested with RN versions `> 0.40.x`. For other versions I haven't had the time to test. Feel free to.
+• For versions < `1.0.0`, use with RN versions `> 0.40.x < 0.59.x`.
+<br />
+• For versions >= `1.0.0`, use with RN versions `> 0.59.x`.
 
 Tested with Android SDK version `>= 16 (Android 4.1 - Jelly Bean)`. Please feel free to test it with other versions.
 
-This repository follows [Semantic Versioning](https://semver.org/). No breaking changes will be incorporated till `v1.x.x`.
+This repository follows [Semantic Versioning](https://semver.org/). No breaking changes will be incorporated till `v2.x.x`.
 
 ## Release Notes.       
 See <a href="https://github.com/MustansirZia/react-native-fused-location/blob/master/CHANGELOG.md"> CHANGELOG.md</a>.     
