@@ -2,6 +2,7 @@
 
 ### 1.0.0 - BREAKING CHANGE.
 ° Support library migrated to AndroidX namespace.
+<br />
 ° Added support for Typescript. ❤️
 
 ### 0.5.0
