@@ -223,8 +223,9 @@ See <a href="https://github.com/MustansirZia/react-native-fused-location/blob/ma
 ## License.
 See <a href="https://github.com/MustansirZia/react-native-fused-location/blob/master/LICENSE.txt"> License</a>.
 
-[![NPM](https://nodei.co/npm/react-native-fused-location.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/react-native-fused-location/)
-
 ## Support.
+
+Support my OSS work by buying me a coffee!
  
-<a href="https://www.buymeacoffee.com/MustansirZia" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-blue.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
+<a href="https://www.buymeacoffee.com/MustansirZia" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-blue.png" alt="Buy Me A Pizza" style="height: 60px !important;width: 217px !important;" ></a>
+
